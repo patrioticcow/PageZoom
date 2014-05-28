@@ -4,27 +4,50 @@ window.addEventListener("message", function (event) {
     if (event.source != window)
         return;
 
-    var playerId = document.getElementById("movie_player");
+    if (event.data.type && (event.data.type == "ping_injected")) {
+        console.log(event.data);
+        window[event.data.func](event.data.val);
 
-    if (event.data.type && (event.data.type == "FROM_CONTENTSCRIPT_SEEK")) {
-        if (event.data.key === 'seek') {
-            if (playerId.hasOwnProperty('seekTo')) {
-                playerId.seekTo(event.data.value);
-            }
-        }
+        //window.postMessage({type: "ping_from_injected", volume: 'from injected'}, "*");
     }
 }, false);
 
-function main(typeName) {
-    var playerId = document.getElementById("movie_player");
-    if (playerId) {
-        if (playerId.hasOwnProperty('getVolume')) {
-            var volume = playerId.getVolume();
-            var currentTime = playerId.getCurrentTime();
+function pageZoom(val)
+{
+    var body = $('body');
+    var z = parseFloat(body.css('zoom'));
 
-            window.postMessage({type: typeName, volume: volume, currentTime: currentTime}, "*");
-        }
+    if(val == 'plus'){
+        var nz = z + 0.1;
     }
+
+    if(val == 'minus'){
+        var nz = z - 0.1;
+    }
+
+    if(val == 'normal'){
+        var nz = 1;
+    }
+
+    body.css({zoom:nz});
 }
 
-main("FROM_PAGE");
+
+
+
+
+
+
+
+
+
+
+
+
+
+function main() {
+    console.log('test');
+    window.postMessage({type: "ping_contentscript", volume: 1, currentTime: 2}, "*");
+}
+
+//main();
