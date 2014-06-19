@@ -6,26 +6,26 @@ function genericOnClick(info, tab) {
     console.log(tab);
 
     // send message to the content script
-    chrome.tabs.sendMessage(tab.id, {ping_contentscript: true}, function (response) {
+    chrome.tabs.sendMessage(tab.id, {ping_contentscript: true, zoom: '', info: info}, function (response) {
         console.log(tab.id);
         console.log(response);
     });
 }
 
 function plusZoom(info, tab) {
-    chrome.tabs.sendMessage(tab.id, {ping_contentscript: true, zoom: 'plus'}, function (response) {
+    chrome.tabs.sendMessage(tab.id, {ping_contentscript: true, zoom: 'plus', info: info}, function (response) {
         console.log(response);
     });
 }
 
 function minusZoom(info, tab) {
-    chrome.tabs.sendMessage(tab.id, {ping_contentscript: true, zoom: 'minus'}, function (response) {
+    chrome.tabs.sendMessage(tab.id, {ping_contentscript: true, zoom: 'minus', info: info}, function (response) {
         console.log(response);
     });
 }
 
 function normalZoom(info, tab) {
-    chrome.tabs.sendMessage(tab.id, {ping_contentscript: true, zoom: 'normal'}, function (response) {
+    chrome.tabs.sendMessage(tab.id, {ping_contentscript: true, zoom: 'normal', info: info}, function (response) {
         console.log(response);
     });
 }

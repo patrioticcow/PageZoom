@@ -25,6 +25,14 @@ function setDefaultSettings(volume, seek) {
 }
 
 function initOptions() {
+
+    chrome.storage.local.get('page_zoom', function (result) {
+        console.log(result);
+    });
+
+
+
+
     var volume_default = document.getElementById("volume_default");
     var seek_default = document.getElementById("seek_default");
     var volume_jump = document.getElementById("volume_jump");

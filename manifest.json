@@ -1,8 +1,8 @@
 {
-    "name": "PageZoom",
-    "version": "0.1.2",
+    "name": "ZumaZum Zum Zum",
+    "version": "0.8.2",
     "manifest_version": 2,
-    "description": "Change page zoom",
+    "description": "Change tha zum",
     "icons": {
         "16": "images/icon-16.png",
         "19": "images/icon-19.png",
@@ -29,7 +29,9 @@
         "default_popup": "popup.html"
     },
     "web_accessible_resources": [
-        "scripts/injected.js"
+        "scripts/jquery.js",
+        "scripts/injected.js",
+        "scripts/jquery.zoomooz.min.js"
     ],
     "content_scripts": [
         {

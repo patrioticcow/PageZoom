@@ -1,26 +1,18 @@
 'use strict';
 
-console.log('content script');
+var state = 0;
 
 function injectJs(link) {
     $('<script type="text/javascript" src="' + link + '"/>').appendTo($('head'));
 }
 
-
 /**
  * inject the script
  */
 $(function () {
-    var playerIdd = document.getElementById("movie_player");
-    if (playerIdd) {
-        injectJs(chrome.extension.getURL('scripts/injected.js'));
-    }
-});
-
-chrome.storage.local.get('ymc_volume', function (result) {
-    if (result.ymc_volume === true) {
-        var seekState = 0;
-    }
+    injectJs(chrome.extension.getURL('scripts/jquery.js'));
+    injectJs(chrome.extension.getURL('scripts/jquery.zoomooz.min.js'));
+    //injectJs(chrome.extension.getURL('scripts/injected.js'));
 });
 
 /**
@@ -39,16 +31,55 @@ window.addEventListener("message", function (event) {
     }
 }, false);
 
-// get messages from bg page
+/**
+ * get messages from bg page
+ */
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.info.selectionText) {
+        var text = window.getSelection ? window.getSelection().focusNode.parentNode : document.selection.createRange().parentElement();
+        text = $(text);
+
+        text.zoomTarget();
+        text.zoomTo({closeclick: true});
+    }
+
+    if (request.info.mediaType) {
+        var src = new URL(request.info.srcUrl);
+        if (request.info.mediaType === 'image') {
+            var media = $("img[src$='" + src.pathname + "']");
+        }
+        media.zoomTarget();
+        media.zoomTo({closeclick: true});
+    }
 
     if (request.ping_contentscript) {
-        window.postMessage({type: "ping_injected", func: 'pageZoom', val: request.zoom}, "*");
+        window.postMessage({type: "ping_injected", func: 'pageZoom', val: request.zoom, info: request.info}, "*");
 
         //sendResponse({pong: true});
         //return;
     }
+});
+/*
+chrome.storage.local.get('page_zoom', function (result) {
+    if (result.page_zoom.page_url === window.location.href) {
+        $('body').css({zoom: result.page_zoom.zoom});
+    }
+});
+*/
+// not used yet
+$(document).mousedown(function (e) {
+    switch (e.which) {
+        case 1:
+            //left Click
+            break;
+        case 2:
+            // middle click and scroll
+            state = state === 1 ? 0 : 1;
+            break;
+        case 3:
+            //right Click
+            break;
+    }
 
-    console.log(request);
-    console.log(sender);
+    return true;
 });
