@@ -59,13 +59,18 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         //return;
     }
 });
-/*
+
 chrome.storage.local.get('page_zoom', function (result) {
-    if (result.page_zoom.page_url === window.location.href) {
-        $('body').css({zoom: result.page_zoom.zoom});
+    if (!isEmpty(result)) {
+        var pageZoom = JSON.parse(result.page_zoom);
+        pageZoom.forEach(function(obj){
+            if (obj.page === window.location.href) {
+                $('body').css({zoom: obj.zoom});
+            }
+        });
     }
 });
-*/
+
 // not used yet
 $(document).mousedown(function (e) {
     switch (e.which) {
@@ -83,3 +88,15 @@ $(document).mousedown(function (e) {
 
     return true;
 });
+
+function isEmpty(obj) {
+    if (obj == null) return true;
+    if (obj.length > 0)    return false;
+    if (obj.length === 0)  return true;
+
+    for (var key in obj) {
+        if (hasOwnProperty.call(obj, key)) return false;
+    }
+
+    return true;
+}

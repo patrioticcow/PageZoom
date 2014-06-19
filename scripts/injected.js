@@ -12,9 +12,6 @@ window.addEventListener("message", function (event) {
 }, false);
 
 function pageZoom(val, info) {
-
-    var storage = '';
-
     if (val !== '') {
         var body = $('body');
         var z = parseFloat(body.css('zoom'));
@@ -36,33 +33,35 @@ function pageZoom(val, info) {
 
         var pageUrl = info.pageUrl;
 
-        //chrome.storage.local.clear();
-
-        chrome.storage.local.get({page_zoom: []}, function (result) {
-            var pageZoom = result.page_zoom;
-            console.log(pageZoom);
-
-            if (pageZoom.length === 0) {
-                pageZoom.push([
-                    {zoom: nz, page_url: pageUrl}
-                ]);
+        chrome.storage.local.get({page_zoom:[]}, function (result) {
+            if (isEmpty(result)) {
+                chrome.storage.local.set({page_zoom: JSON.stringify([{page: pageUrl, zoom: nz}])}, null);
             } else {
-                pageZoom.forEach(function (v) {
-                    console.log(v);
-                    if (v.page_url === pageUrl) {
-                        pageZoom.push([
-                            {zoom: nz, page_url: pageUrl}
-                        ]);
+                var pageZoom = JSON.parse(result.page_zoom);
+                pageZoom.forEach(function(obj){
+                    if (obj.page === pageUrl) {
+                        chrome.storage.local.set({page_zoom : JSON.stringify([{page: pageUrl, zoom: nz}])}, null);
                     } else {
-                        pageZoom.push([
-                            {zoom: nz, page_url: pageUrl}
-                        ]);
+                        pageZoom.push({page: pageUrl, zoom: nz});
+                        console.log(pageZoom);
+                        chrome.storage.local.set({page_zoom : JSON.stringify(pageZoom)}, null);
                     }
                 });
             }
-
         });
 
-        chrome.storage.local.set({page_zoom: pageZoom}, null);
+        //chrome.storage.local.clear();
     }
+}
+
+function isEmpty(obj) {
+    if (obj == null) return true;
+    if (obj.length > 0)    return false;
+    if (obj.length === 0)  return true;
+
+    for (var key in obj) {
+        if (hasOwnProperty.call(obj, key)) return false;
+    }
+
+    return true;
 }

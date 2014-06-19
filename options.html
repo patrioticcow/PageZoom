@@ -14,60 +14,13 @@
 				<h3 class="panel-title">ZumaZum Zum Zum</h3>
 			</div>
 			<div class="panel-body">
-				<form class="form" role="form">
-					<div class="checkbox">
-						<label>
-							<input type="radio" name="default_settings" id="volume_default"> Use Volume Controls by default
-						</label>
-					</div>
-					<div class="checkbox">
-						<label>
-							<input type="radio" name="default_settings" id="seek_default"> Use Seek Controls by default
-						</label>
-					</div>
-					<div class="row">
-						<div class="form-group col-lg-4 col-md-4">
-							<label for="volume_jump">Volume sensitivity</label>
-							<select class="form-control" name="volume_jump" id="volume_jump">
-								<option selected disabled>Select</option>
-								<option value="1">1 sec</option>
-								<option value="2">2 sec</option>
-								<option value="3">3 sec</option>
-								<option value="4">4 sec</option>
-								<option value="5">5 sec</option>
-								<option value="6">6 sec</option>
-								<option value="7">7 sec</option>
-								<option value="8">8 sec</option>
-								<option value="9">9 sec</option>
-								<option value="10">10 sec</option>
-							</select>
-						</div>
-					</div>
-					<div class="row">
-						<div class="form-group col-lg-4 col-md-4">
-							<label for="seek_jump">Seek sensitivity</label>
-							<select class="form-control" name="seek_jump" id="seek_jump">
-								<option selected disabled>Select</option>
-								<option value="1">1 sec</option>
-								<option value="2">2 sec</option>
-								<option value="3">3 sec</option>
-								<option value="4">4 sec</option>
-								<option value="5">5 sec</option>
-								<option value="6">6 sec</option>
-								<option value="7">7 sec</option>
-								<option value="8">8 sec</option>
-								<option value="9">9 sec</option>
-								<option value="10">10 sec</option>
-							</select>
-						</div>
-					</div>
-				</form>
-				<div class="alert">* The sessings will save automatically</div>
+				<div class="list-group" id="listGroup"></div>
 			</div>
 		</div>
 	</div>
 </div>
 
+<script src="scripts/jquery.js"></script>
 <script src="scripts/options.js"></script>
 </body>
 </html>

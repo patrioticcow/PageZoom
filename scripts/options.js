@@ -1,64 +1,45 @@
 "use strict";
 
-function defaultSettings() {
-    if (this.id === 'volume_default') {
-        setDefaultSettings(true, false);
-    }
-    if (this.id === 'seek_default') {
-        setDefaultSettings(false, true);
-    }
-}
-
-function jumpSettings() {
-    var val = this.options.selectedIndex;
-    if (this.id === 'volume_jump') {
-        chrome.storage.local.set({ymc_jump_volume: val}, null);
-    }
-    if (this.id === 'seek_jump') {
-        chrome.storage.local.set({ymc_jump_seek: val}, null);
-    }
-}
-
-function setDefaultSettings(volume, seek) {
-    chrome.storage.local.set({ymc_volume: volume}, null);
-    chrome.storage.local.set({ymc_seek: seek}, null);
-}
-
 function initOptions() {
+    storage('nil');
 
+    $('body').on('click', '.delete', function () {
+        var l = $(this).data('link');
+        storage(l);
+    });
+}
+
+function storage(del) {
     chrome.storage.local.get('page_zoom', function (result) {
-        console.log(result);
+        if (!isEmpty(result)) {
+            var html = '';
+            var pageZoom = JSON.parse(result.page_zoom);
+
+            if (del !== "nil") {
+                pageZoom.splice(del, 1);
+                chrome.storage.local.set({page_zoom: JSON.stringify(pageZoom)}, null);
+                storage();
+            } else {
+                pageZoom.forEach(function (obj, k) {
+                    html += ('<a href="#" class="list-group-item disabled"><button class="btn btn-danger delete" data-link="' + k + '">x</button> ' + obj.zoom.toFixed(2).replace(/\.?0+$/, "") + ': ' + obj.page + '</a>');
+                });
+
+                $('#listGroup').html(html);
+            }
+        }
     });
+}
 
+function isEmpty(obj) {
+    if (obj == null) return true;
+    if (obj.length > 0)    return false;
+    if (obj.length === 0)  return true;
 
+    for (var key in obj) {
+        if (hasOwnProperty.call(obj, key)) return false;
+    }
 
-
-    var volume_default = document.getElementById("volume_default");
-    var seek_default = document.getElementById("seek_default");
-    var volume_jump = document.getElementById("volume_jump");
-    var seek_jump = document.getElementById("seek_jump");
-
-    volume_default.addEventListener('click', defaultSettings);
-    seek_default.addEventListener('click', defaultSettings);
-    volume_jump.addEventListener('change', jumpSettings);
-    seek_jump.addEventListener('change', jumpSettings);
-
-    // get defaults
-    chrome.storage.local.get('ymc_volume', function (result) {
-        volume_default.checked = result.ymc_volume;
-    });
-
-    chrome.storage.local.get('ymc_seek', function (result) {
-        seek_default.checked = result.ymc_seek;
-    });
-
-    chrome.storage.local.get('ymc_jump_volume', function (result) {
-        volume_jump.options[result.ymc_jump_volume].selected  = true;
-    });
-
-    chrome.storage.local.get('ymc_jump_seek', function (result) {
-        seek_jump.options[result.ymc_jump_seek].selected  = true;
-    });
+    return true;
 }
 
 document.addEventListener('DOMContentLoaded', initOptions);
